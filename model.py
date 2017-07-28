@@ -172,9 +172,9 @@ if __name__ == '__main__':
                              nb_val_samples optimizer samples_per_epoch in_shape')
 
     ## load data database from exported files 
-    samples = balance_data(["./exported/export_2017_07_23_12_23_46.csv",
-                            "./exported/export_2017_07_23_12_25_33.csv",
-                            "./exported/export_2017_07_23_12_25_43.csv"], False, reduce_factor=0.00)
+    samples = balance_data(["./_data/export_2017_07_23_12_23_46.csv",
+                            "./_data/export_2017_07_23_12_25_33.csv",
+                            "./_data/export_2017_07_23_12_25_43.csv"], False, reduce_factor=0.00)
 
     # shuffle the dataframe
     samples = shuffle(samples)
