@@ -70,29 +70,6 @@ def load_data (abs_filepath):
             Y_RIGHT.append(angle - CORRECTION_DELTA)
             Y_LEFT.append(angle + CORRECTION_DELTA)
 
-def find_peaks(input_list, min_to_neighbors=1.8, min_to_max_value=0.05):
-    #adapted solution from https://stackoverflow.com/a/38521078
-    #find peaks in array with value bigger that the min_to_neighbors 
-    #(default = 180%) of that the neighbors and bigger that the 
-    #min_to_max_value (default = 5%) of the max value 
-    
-    in_arr = np.array(input_list)
-    max_in_arr = np.max(in_arr)
-    len_list = len(input_list)
-    result = []
-    for i in range(len_list):
-        is_peak = True
-        if i-1 > 0:
-            is_peak &= (in_arr[i] > min_to_neighbors * in_arr[i-1])
-            
-        if i+1 < len_list:
-            is_peak &= (in_arr[i] > min_to_neighbors * in_arr[i+1])
-
-        is_peak &= (in_arr[i] > min_to_max_value * max_in_arr)
-        if is_peak:
-            result.append(i)
-    return result
-
 def balance_data(datafiles, plot_data=False, reduce_factor=0.0):
     # datafiles: array containing csv fílepaths
 
@@ -106,17 +83,6 @@ def balance_data(datafiles, plot_data=False, reduce_factor=0.0):
     
     # retrieve the indices of bins
     indices_of_bins = np.digitize(data, b)
-    #print ("indices_of_bins: {}".format(len(indices_of_bins)))
-    # find the unique values of bins
-    arr_unique = np.unique(indices_of_bins)
-    #print ("arr_unique: {}".format(arr_unique))
-    # count the occurence of unique values of bins
-    f = lambda a, v: a.tolist().count(v)
-    occurence = [f(indices_of_bins, value) for value in arr_unique]
-    #print ("occurences in bins: {}".format(occurence))
-
-    # find the peaks within the data
-    peaks = find_peaks(occurence)
 
     # create a dataframe with all values
     df_left = pd.DataFrame({"images": LEFT_IMAGES, "orientation": ['left' for index in range(len(LEFT_IMAGES))], "angles": Y_LEFT})
