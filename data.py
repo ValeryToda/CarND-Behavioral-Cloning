@@ -9,7 +9,9 @@ import matplotlib.pyplot as plt
 import random
 from utils import *
 
+# global variables 
 USE_GRAY_IMAGES = True
+PRE_STD_NORMALIZATION = True
 CORRECTION_DELTA = 0.2
 LEFT_IMAGES = []
 RIGHT_IMAGES = []
@@ -135,12 +137,13 @@ def random_adjust_image(img):
     return result
 
 
-def normalize_pixel_values(img, gray=USE_GRAY_IMAGES):
+def normalize_pixel_values(img, gray=USE_GRAY_IMAGES, norm_std=PRE_STD_NORMALIZATION):
     # Zero center and normalize the pixel values
     if gray:
         img = rgb2gray(img)
         img -= np.mean(img)
-        img /= np.std(img)
+        if norm_std:
+            img /= np.std(img)
     else:
         img = img/255.0 - 1.0
     return img

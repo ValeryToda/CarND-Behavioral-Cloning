@@ -17,7 +17,7 @@ import cv2
 import pickle
 import numpy as np
 import math
-from data import balance_data, generator, is_gray_mode
+from data import *
 from utils import threadsafe_iter
 
 train_generator = None
@@ -58,13 +58,17 @@ def load_model(json_filepath, weights_filepath, save_binary=False):
     return loaded_model
 
 
-def nvidia_model(in_shape):
+def nvidia_model(in_shape, std_norm=True):
     ## model derived from nvidia model architecture
     # https://arxiv.org/pdf/1604.07316v1.pdf
-    # Dropouts and RELUs added
+    # Normalization, Dropouts and RELUs added
 
     model = Sequential()
-    model.add(Conv2D(24, (5, 5), input_shape=in_shape, name='cv_1'))
+    if std_norm:
+        model.add(Lambda(lambda in_data: in_data / K.std(in_data), input_shape=in_shape, name='ld_0'))
+        model.add(Conv2D(24, (5, 5), name='cv_1'))
+    else:
+        model.add(Conv2D(24, (5, 5), input_shape=in_shape, name='cv_1'))
     model.add(Conv2D(36, (5, 5), strides=(2, 2), padding='same', name='cv_2'))
     
     model.add(BatchNormalization(name='bn_00'))    
@@ -111,10 +115,12 @@ def train(hyper_params, ropl=True, resume=[]):
     if len(resume) > 0:
         model = load_model(resume[0], resume[1])
     else:
-        model = nvidia_model(hyper_params.in_shape)
+        norm_param = not PRE_STD_NORMALIZATION
+        model = nvidia_model(hyper_params.in_shape, std_norm=norm_param)
 
     # for SGD optimizer
-    model.compile(optimizer=optimizers.Adam(lr=hyper_params.learning_rate), loss='mean_squared_error', metrics=['accuracy'])
+    model.compile(optimizer=optimizers.Adam(lr=hyper_params.learning_rate), 
+                  loss='mean_squared_error', metrics=['accuracy'])
     ## Model Summary
     model.summary()
     ## Save the model topology
@@ -125,7 +131,8 @@ def train(hyper_params, ropl=True, resume=[]):
                                     save_best_only=True)
 
     # reduce the learnrate on plateau during training 
-    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=10, min_lr=0.1e-6, verbose=1)
+    reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5, 
+                                    patience=10, min_lr=0.1e-6, verbose=1)
     
     # Callback list. will be call during training 
     callbacks_list = [checkpointer]
@@ -172,9 +179,10 @@ if __name__ == '__main__':
                              nb_val_samples optimizer samples_per_epoch in_shape')
 
     ## load data database from exported files 
-    samples = balance_data(["./_data/export_2017_07_23_12_23_46.csv",
-                            "./_data/export_2017_07_23_12_25_33.csv",
-                            "./_data/export_2017_07_23_12_25_43.csv"], False, reduce_factor=0.00)
+    samples = balance_data(["./exported/export_2017_07_23_12_23_46.csv",
+                            "./exported/export_2017_07_23_12_25_33.csv",
+                            "./exported/export_2017_07_23_12_25_43.csv"], 
+                            False, reduce_factor=0.00)
 
     # shuffle the dataframe
     samples = shuffle(samples)
