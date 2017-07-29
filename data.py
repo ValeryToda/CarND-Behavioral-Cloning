@@ -159,18 +159,6 @@ def crop_and_resize(image, plot=False):
 def pre_process_image(image):
     return normalize_pixel_values(crop_and_resize(image))
 
-def load_all_data(samples):
-    """
-    samples: pf.Dataframe ['images', 'angles]
-    imports data from the source folder and 
-    returns X_train and y_train
-    """
-    images = []
-    angles = []
-    for index, row in samples.iterrows():
-        images.append(pre_process_image(skimg.imread(row['images'])))
-        angles.append(row['angles'])
-    return np.array(images), np.array(angles)
 
 @threadsafe_generator
 def generator(samples, batch_size=256):
