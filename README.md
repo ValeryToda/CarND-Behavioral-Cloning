@@ -1,4 +1,4 @@
-#**Behavioral Cloning Project** 
+# **Behavioral Cloning Project** 
 
 ---
 
@@ -30,9 +30,9 @@ The goals / steps of this project are the following:
 [fabw]: ./examples/frame_adjusted_bw.png "Image with raised S and V values grayscaled"
 
 ---
-###Files & Code
+### Files & Code
 
-####1. Submission includes all required files and can be used to run the simulator in autonomous mode
+#### 1. Submission includes all required files and can be used to run the simulator in autonomous mode
 
 This project includes the following files:
 
@@ -44,29 +44,29 @@ This project includes the following files:
 * [repository](https://github.com/ValeryToda/DataVisualizer) containing all files used to visualize the data offline in order to perform data sanity checks and select relevant data.
 * writeup\_report.md summarizing the results
 
-####2. Submission includes functional code
+#### 2. Submission includes functional code
 Using the Udacity provided simulator and my drive.py file, the car can be driven autonomously around the track /examples/by executing 
 
 ```sh
 python drive.py model.h5
 ```
 
-####3. Submission code is usable and readable
+#### 3. Submission code is usable and readable
 
 The model.py file contains the code for training and saving the convolution neural network. The files drive.py and data.py show the pipeline I used for training and validating the model, and they contain comments to explain how the code works.
 
 ###Model Architecture and Training Strategy
 
-####1. An appropriate model architecture has been employed
+#### 1. An appropriate model architecture has been employed
 
 My model consists of an adapted version of the convolution neural network described in this [paper](https://arxiv.org/pdf/1604.07316v1.pdf) used by the NVIDIA team in a similar project. The adaptation consist of the inclusion of Keras batch normalisation, dropout and relu layers. The model includes relu layers to introduce nonlinearity.
 
-####2. Attempts to reduce overfitting in the model
+#### 2. Attempts to reduce overfitting in the model
 
 The model contains dropout and batch normalisation layers in order to reduce overfitting. 
 The model was trained and validated on different data sets to ensure that the model was not overfitting. The model was tested by running it through the simulator and ensuring that the vehicle could stay on the track.
 
-####3. Model parameter tuning
+#### 3. Model parameter tuning
 
 The model used an adam optimizer, so the learning rate was not tuned manually. But depending on the training setting the learning rate can automatically be reduced (divided by 2) after 10 consecutive epochs if the loss is not decreasing.
 
@@ -76,7 +76,7 @@ reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5,
                                     patience=10, min_lr=0.1e-6, verbose=1)
 ```
 
-####4. Appropriate training data
+#### 4. Appropriate training data
 
 
 Training data was chosen to keep the vehicle driving on the road. I used a combination of center, right and left lane driving and recovering from the left and right sides of the road. After driving in track 1 and 2 normally, i then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to recover from unwanted positions. Then I used this [tool](https://github.com/ValeryToda/DataVisualizer):
@@ -104,9 +104,9 @@ The data was then reduced to get a balanced set of 31446 training data with pred
 
 *Training data after reduction*
 
-###Model Architecture and Training Strategy
+### Model Architecture and Training Strategy
 
-####1. Solution Design Approach
+#### 1. Solution Design Approach
 
 
 My first step was to use a convolution neural network model similar to the model I implemented in Project 2. I thought this model might be appropriate. That model was not able to approximatively predict good steering angles. I then switched to the NVIDIA model.
@@ -119,13 +119,13 @@ The final step was to run the simulator to see how well the car was driving arou
 
 At the end of the process, the vehicle is able to drive autonomously around the track without leaving the road.
 
-####2. Final Model Architecture
+#### 2. Final Model Architecture
 
 The final model architecture consists of a convolution neural network. Here is a visualization of the architecture:
 
 ![alt text][cnn]
 
-####3. Creation of the Training Set & Training Process
+#### 3. Creation of the Training Set & Training Process
 
 To capture good driving behavior, I first recorded two laps on track one using center lane driving. Here is an example image of center lane driving:
 
