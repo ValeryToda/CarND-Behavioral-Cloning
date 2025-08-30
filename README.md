@@ -78,7 +78,7 @@ reduce_lr = ReduceLROnPlateau(monitor='val_loss', factor=0.5,
 #### 4. Appropriate training data
 
 
-Training data was chosen to keep the vehicle driving on the road. I used a combination of center, right and left lane driving and recovering from the left and right sides of the road. After driving in track 1 and 2 normally, i then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to recover from unwanted positions. Then I used this [tool](https://github.com/ValeryToda/DataVisualizer):
+Training data was chosen to keep the vehicle driving on the road. I used a combination of center, right and left lane driving and recovering from the left and right sides of the road. After driving in track 1 and 2 normally, i then recorded the vehicle recovering from the left side and right sides of the road back to center so that the vehicle would learn to recover from unwanted positions. Then I used a self backed tool:
 
 ![][data_visualizer]
 
